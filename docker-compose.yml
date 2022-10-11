@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "9000:9000"
+#    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      org.label-schema.group: "monitoring"
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - WATCHTOWER_HTTP_API_METRICS=true
+      - WATCHTOWER_HTTP_API_METRICS_PORT=8080
+      - WATCHTOWER_HTTP_API_TOKEN=testtoken
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
